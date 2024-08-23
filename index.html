@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./niivue.css" />
+  <title>Niivue brain chop</title>
+</head>
+
+<body>
+  <header>
+    <label for="clipCheck">Clip Plane</label>
+    <input type="checkbox" id="clipCheck" unchecked />
+    <label for="opacitySlider0">Background Opacity</label>
+    <input type="range" min="0" max="255" value="255" class="slider" id="opacitySlider0" />
+    &nbsp;
+    <label for="opacitySlider1">Overlay Opacity</label>
+    <input type="range" min="0" max="255" value="128" class="slider" id="opacitySlider1" />
+    &nbsp;
+    <label for="modelSelect">Segmentation Model</label>
+    <select id="modelSelect">
+    </select>
+    &nbsp;
+    <button id="createMeshBtn">Create Mesh</button>
+    &nbsp;
+    <button id="saveBtn">Save Image</button>
+    &nbsp;
+    <button id="saveMeshBtn">Save Mesh</button>
+    &nbsp;
+    <button id="aboutBtn">About</button>
+    &nbsp;
+    <label for="workerCheck"  hidden>Use Webworker</label>
+    <input type="checkbox"  hidden title="webworkers are faster but not supported by all browsers" id="workerCheck" checked />
+    &nbsp;
+    <div id="loadingCircle" class="loading-circle hidden"></div>
+
+  </header>
+  <main id="canvas-container">
+    <canvas id="gl1"></canvas>
+  </main>
+  <footer>
+    <div class="footer">
+      <table class="footer">
+        <tr>
+          <th id="location">Drag and Drop any NIfTI image</th>
+          <th><progress id="modelProgress" value="0" max="100"> 32% </progress></th>
+          <th>
+            <!-- important to use class footer here -->
+            <div class="footer" id="memstatus" style="color: green">Memory OK</div>
+          </th>
+        </tr>
+      </table>
+    </div>
+  </footer>
+  <dialog id="remeshDialog">
+    <form method="dialog">
+      <p>
+        <label>Closing (mm)</label>
+        <input id="closeMM" type="number" min="0"  value="4" max="100">
+      </p>
+      <p>
+        <label>
+          Hollow:
+          <select id="hollowSelect">
+            <option value="0">False: solid</option>
+            <option value="-1">1mm</option>
+            <option value="-2">2mm</option>
+            <option value="-4" selected>4mm</option>
+            <option value="-8">8mm</option>
+            <option value="-16">16mm</option>
+          </select>
+        </label>
+      </p>
+      <p>
+        <input type="checkbox" id="bubbleCheck" checked/>
+        <label>Fill bubbles</label>
+      </p>
+      <p>
+        <input type="checkbox" id="largestCheck" checked/>
+        <label>Largest cluster only</label>
+      </p>
+      <p>
+        <label for="smoothSlide">Smoothing</label>
+        <input
+          type="range"
+          min="0"
+          max="20"
+          value="5"
+          class="slider"
+          id="smoothSlide"
+        />
+      </p>
+      <p>
+        <label>Simplify Percent (1..100)</label>
+        <input id="shrinkPct" type="number" min="1"  value="30" max="100">
+      </p>
+      <button id="cancelBtn" formmethod="dialog">Cancel</button>
+      <button autofocus id="applyBtn" value="default">Apply</button>
+    </form>
+  </dialog>
+  <dialog id="saveDialog">
+    <form method="dialog">
+      <p>
+        <label>
+          Format:
+          <select id="formatSelect">
+            <option>MZ3 small and precise</option>
+            <option selected>OBJ widely supported</option>
+            <option>STL popular for printing</option>
+          </select>
+        </label>
+      </p>
+      <p>
+        <select id="scaleSelect">
+          <option value="4">1:4 Quarter Scale</option>
+          <option value="3">1:3 Third Scale</option>
+          <option value="2">1:2 Half Scale</option>
+          <option value="1" selected>1:1 Full Scale</option>
+        </select>
+      </p>
+      <button id="cancelSaveBtn" formmethod="dialog">Cancel</button>
+      <button autofocus id="applySaveBtn" value="default">Save</button>
+    </form>
+  </dialog>
+  <script type="module" src="/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,20 @@
+{
+  "name": "niivue-brainchop",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@niivue/niimath": "^0.1.1",
+    "@niivue/niivue": "^0.44.2",
+    "@tensorflow/tfjs": "^4.19.0",
+    "gl-matrix": "^3.4.3"
+  },
+  "devDependencies": {
+    "vite": "^5.4.2"
+  }
+}
