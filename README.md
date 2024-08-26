@@ -1,6 +1,6 @@
 # brain2print
 
-This is an extension of [brainchop](https://github.com/neuroneural/brainchop) that converts voxel-based MRI scans to 3D meshes that can be printed. No data is sent to a server. *Everything* happens in your browser window, on *your* machine. 
+This is an extension of [brainchop](https://github.com/neuroneural/brainchop) that converts voxel-based MRI scans to 3D meshes that can be printed. **No data is sent to a server. *Everything* happens in your browser window, on *your* machine**. 
 
 ![image of web page](brain2print.png)
 
@@ -42,5 +42,13 @@ npm run dev
 ```bash
 npm run build
 ```
+
+## References
+
+### Our group's open source software used in this applicaiton
+
+- [brainchop](https://github.com/neuroneural/brainchop)
+- [niivue](https://github.com/niivue/niivue)
+- [niimath](https://github.com/rordenlab/niimath)
 
 
