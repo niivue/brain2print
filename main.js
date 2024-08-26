@@ -5,50 +5,6 @@ import { inferenceModelsList, brainChopOpts } from "./brainchop-parameters.js"
 import { isChrome, localSystemDetails } from "./brainchop-telemetry.js"
 import MyWorker from "./brainchop-webworker.js?worker"
 
-// class NiiMathWrapper {
-//   constructor(workerScript) {
-//     this.worker = new Worker(workerScript)
-//   }
-//   static async load(workerScript = './niimathWorker.js') {
-//     return new NiiMathWrapper(workerScript)
-//   }
-//   niimath(niiBuffer, operationsText) {
-//     return new Promise((resolve, reject) => {
-//       const niiBlob = new Blob([niiBuffer], { type: 'application/octet-stream' })
-//       const inName = 'input.nii' // or derive from context
-//       let outName = inName
-//       if (operationsText.includes("-mesh")) {
-//         outName = 'output.mz3' // or derive from context
-//       }
-//       const args = operationsText.trim().split(/\s+/)
-//       args.unshift(inName)
-//       args.push(outName)
-//       const file = new File([niiBlob], inName)
-//       this.worker.onmessage = (e) => {
-//         if (e.data.blob instanceof Blob) {
-//           const reader = new FileReader()
-//           reader.onload = () => {
-//             resolve(reader.result) // return ArrayBuffer
-//           }
-//           reader.onerror = () => {
-//             reject(new Error('Failed to read the Blob as an ArrayBuffer'))
-//           }
-//           reader.readAsArrayBuffer(e.data.blob)
-//         } else {
-//           reject(new Error('Expected Blob from worker'))
-//         }
-//       }
-//       this.worker.onerror = (e) => {
-//         reject(new Error(e.message))
-//       }
-//       this.worker.postMessage({ blob: file, cmd: args, outName: outName })
-//     })
-//   }
-//   terminate() {
-//     this.worker.terminate()
-//   }
-// }
-
 async function main() {
   const niimath = new Niimath()
   await niimath.init()
