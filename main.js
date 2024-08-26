@@ -13,7 +13,7 @@ async function main() {
     nv1.setInterpolation(!smoothCheck.checked)
   }*/
   aboutBtn.onclick = function () {
-    const url = "https://github.com/neurolabusc/niivue-brainchop";
+    const url = "https://github.com/niivue/brain2print";
     window.open(url, '_blank');
   }
   /*diagnosticsBtn.onclick = function () {
