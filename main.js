@@ -29,6 +29,7 @@ async function main() {
     nv1.updateGLVolume()
   }
   opacitySlider1.oninput = function () {
+    if (nv1.volumes.length < 2) return
     nv1.setOpacity(1, opacitySlider1.value / 255)
   }
   async function ensureConformed() {
@@ -218,6 +219,8 @@ async function main() {
     }
     let reduce = Math.min(Math.max(Number(shrinkPct.value) / 100, 0.01), 1)
     ops.r = reduce
+    let smooth = parseFloat(smoothSlide.value)
+    ops.s = smooth
     if (bubbleCheck.checked) {
       ops.b = 1
     }
