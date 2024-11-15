@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="./niivue.css" />
   <title>brain2print</title>
-  <script type="module" crossorigin src="./assets/index-CNZOlbQj.js"></script>
+  <script type="module" crossorigin src="./assets/index-D7cKxqvX.js"></script>
 </head>
 
 <body>
@@ -14,10 +14,10 @@
     <label for="clipCheck">Clip Plane</label>
     <input type="checkbox" id="clipCheck" unchecked />
     <label for="opacitySlider0">Background Opacity</label>
-    <input type="range" min="0" max="255" value="255" class="slider" id="opacitySlider0" />
+    <input title="Control transparency of grayscale voxel-based image" type="range" min="0" max="255" value="255" class="slider" id="opacitySlider0" />
     &nbsp;
     <label for="opacitySlider1">Overlay Opacity</label>
-    <input type="range" min="0" max="255" value="128" class="slider" id="opacitySlider1" />
+    <input title="Control transparency of colored voxel-based segmentation" type="range" min="0" max="255" value="128" class="slider" id="opacitySlider1" />
     &nbsp;
     <label for="modelSelect">Segmentation Model</label>
     <select id="modelSelect">
@@ -63,7 +63,7 @@
       <p>
         <label>
           Hollow:
-          <select id="hollowSelect">
+          <select id="hollowSelect" title="hollow meshes require less material but may be fragile">
             <option value="0">False: solid</option>
             <option value="-1">1mm</option>
             <option value="-2">2mm</option>
@@ -87,14 +87,15 @@
           type="range"
           min="0"
           max="20"
-          value="5"
+          value="0"
           class="slider"
           id="smoothSlide"
+          title="smoothing makes mesh less jagged, but can create self intersecting triangles"
         />
       </p>
       <p>
         <label>Simplify Percent (1..100)</label>
-        <input id="shrinkPct" type="number" min="1"  value="30" max="100">
+        <input title="adaptive triangle reduction reduces file size but can introduce defectss" id="shrinkPct" type="number" min="1"  value="100" max="100">
       </p>
       <button id="cancelBtn" formmethod="dialog">Cancel</button>
       <button autofocus id="applyBtn" value="default">Apply</button>
@@ -107,8 +108,8 @@
           Format:
           <select id="formatSelect">
             <option>MZ3 small and precise</option>
-            <option selected>OBJ widely supported</option>
-            <option>STL popular for printing</option>
+            <option>OBJ widely supported</option>
+            <option selected>STL popular for printing</option>
           </select>
         </label>
       </p>
