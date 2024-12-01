@@ -1,16 +1,16 @@
-import { defineConfig } from 'vite'
+import { defineConfig } from "vite";
 
 export default defineConfig({
   // root: '.',
-  base: './',
+  base: "./",
   server: {
-    open: 'index.html',
+    open: "index.html",
   },
   worker: {
-    format: 'esm'
+    format: "esm",
   },
   // exclude @niivue/niimath from optimization
   optimizeDeps: {
-    exclude: ['@niivue/niimath']
-  }
-})
+    exclude: ["@niivue/niimath", "@itk-wasm/cuberille"],
+  },
+});
