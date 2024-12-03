@@ -226,67 +226,26 @@ async function main() {
     }
   };
   applyBtn.onclick = async function () {
+    const volIdx = nv1.volumes.length - 1
     const niiBuffer = await nv1.saveImage({
-      volumeByIndex: nv1.volumes.length - 1,
+      volumeByIndex: volIdx,
     }).buffer;
     const niiBlob = new Blob([niiBuffer], { type: "application/octet-stream" });
     const niiFile = new File([niiBlob], "input.nii");
-    // get an ImageProcessor instance from niimath
-    // so we can build up the operations we want to perform
-    // based on the UI controls
-    // let image = niimath.image(niiFile);
-    // loadingCircle.classList.remove("hidden");
-    // // initialize the operations object for the niimath mesh function
-    // let ops = {
-    //   i: 0.5,
-    // };
-    // //const largestCheckValue = largestCheck.checked
-    // if (largestCheck.checked) {
-    //   ops.l = 1;
-    // }
-    // let reduce = Math.min(Math.max(Number(shrinkPct.value) / 100, 0.01), 1);
-    // ops.r = reduce;
-    // let smooth = parseFloat(smoothSlide.value);
-    // ops.s = smooth;
-    // if (bubbleCheck.checked) {
-    //   ops.b = 1;
-    // }
-
-    // let hollowInt = Number(hollowSelect.value);
-    // if (hollowInt < 0) {
-    //   // append the hollow operation to the image processor
-    //   // but dont run it yet.
-    //   image = image.hollow(0.5, hollowInt);
-    // }
-
-    // let closeFloat = Number(closeMM.value);
-    // if (isFinite(closeFloat) && closeFloat > 0) {
-    //   // append the close operation to the image processor
-    //   // but dont run it yet.
-    //   image = image.close(0.5, closeFloat, 2 * closeFloat);
-    // }
-    // // add the mesh operations
-    // image = image.mesh(ops);
-    // console.log("niimath mesh operation", image.commands);
-    const hdr = nv1.volumes[1].hdr;
-    const img = nv1.volumes[1].img;
-
+    loadingCircle.classList.remove("hidden");
+    const hdr = nv1.volumes[volIdx].hdr;
+    const img = nv1.volumes[volIdx].img;
     const itkImage = nii2iwi(hdr, img, false);
     itkImage.size = itkImage.size.map(Number);
     const { mesh } = await antiAliasCuberille(itkImage);
-
     const niiMesh = iwm2meshCore(mesh);
-    console.log(niiMesh);
-    console.log(nv1);
-
-    // finally, run the full set of operations
-    // const outFile = await image.run("output.mz3");
-    // const outFile = await image.run("output.nii");
-    // const arrayBuffer = await outFile.arrayBuffer();
     loadingCircle.classList.add("hidden");
-    if (nv1.meshes.length > 0) nv1.removeMesh(nv1.meshes[0]);
-    // await nv1.loadFromArrayBuffer(arrayBuffer, "output.mz3");
-    // nv1.reverseFaces(0);
+    while (nv1.meshes.length > 0) {
+      nv1.removeMesh(nv1.meshes[0]);
+     }
+    const meshBuffer = NVMeshUtilities.createMZ3(niiMesh.positions, niiMesh.indices,  false)
+    await nv1.loadFromArrayBuffer(meshBuffer, 'trefoil.mz3')
+    nv1.reverseFaces(0);
   };
   saveMeshBtn.onclick = function () {
     if (nv1.meshes.length < 1) {
