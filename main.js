@@ -5,7 +5,7 @@ import { inferenceModelsList, brainChopOpts } from "./brainchop-parameters.js";
 import { isChrome, localSystemDetails } from "./brainchop-telemetry.js";
 import MyWorker from "./brainchop-webworker.js?worker";
 import { antiAliasCuberille } from "@itk-wasm/cuberille";
-import { repair, smoothRemesh } from "@itk-wasm/mesh-filters";
+import { repair, smoothRemesh, keepLargestComponent } from "@itk-wasm/mesh-filters";
 import { nii2iwi, iwm2meshCore } from "@niivue/cbor-loader";
 
 async function main() {
@@ -235,11 +235,14 @@ async function main() {
     itkImage.size = itkImage.size.map(Number);
 
     const { mesh } = await antiAliasCuberille(itkImage, { noClosing: true });
+    meshProcessingMsg.textContent = "Generating manifold"
     const { outputMesh: repairedMesh } = await repair(mesh);
+    meshProcessingMsg.textContent = "Keep largest mesh component"
+    const { outputMesh: largestOnly } = await keepLargestComponent(repairedMesh)
     while (nv1.meshes.length > 0) {
       nv1.removeMesh(nv1.meshes[0]);
      }
-    const initialNiiMesh = iwm2meshCore(repairedMesh);
+    const initialNiiMesh = iwm2meshCore(largestOnly);
     const initialNiiMeshBuffer = NVMeshUtilities.createMZ3(initialNiiMesh.positions, initialNiiMesh.indices, false)
     await nv1.loadFromArrayBuffer(initialNiiMeshBuffer, 'trefoil.mz3')
     saveMeshBtn.disabled = false
@@ -247,7 +250,7 @@ async function main() {
     meshProcessingMsg.textContent = "Smoothing and remeshing"
     const smooth = parseInt(smoothSlide.value)
     const shrink = parseFloat(shrinkPct.value)
-    const { outputMesh: smoothedMesh } = await smoothRemesh(repairedMesh, { newtonIterations: smooth, numberPoints: shrink });
+    const { outputMesh: smoothedMesh } = await smoothRemesh(largestOnly, { newtonIterations: smooth, numberPoints: shrink });
     const niiMesh = iwm2meshCore(smoothedMesh);
     loadingCircle.classList.add("hidden");
     meshProcessingMsg.classList.add("hidden");
