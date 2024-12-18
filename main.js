@@ -5,6 +5,7 @@ import { inferenceModelsList, brainChopOpts } from "./brainchop-parameters.js";
 import { isChrome, localSystemDetails } from "./brainchop-telemetry.js";
 import MyWorker from "./brainchop-webworker.js?worker";
 import { antiAliasCuberille } from "@itk-wasm/cuberille";
+import { repair, smoothRemesh } from "@itk-wasm/mesh-filters";
 import { nii2iwi, iwm2meshCore } from "@niivue/cbor-loader";
 
 async function main() {
@@ -237,15 +238,22 @@ async function main() {
     const img = nv1.volumes[volIdx].img;
     const itkImage = nii2iwi(hdr, img, false);
     itkImage.size = itkImage.size.map(Number);
-    const { mesh } = await antiAliasCuberille(itkImage);
-    const niiMesh = iwm2meshCore(mesh);
+    const { mesh } = await antiAliasCuberille(itkImage, { noClosing: true });
+    const { outputMesh: repairedMesh } = await repair(mesh);
+    while (nv1.meshes.length > 0) {
+      nv1.removeMesh(nv1.meshes[0]);
+     }
+    const initialNiiMesh = iwm2meshCore(repairedMesh);
+    const initialNiiMeshBuffer = NVMeshUtilities.createMZ3(initialNiiMesh.positions, initialNiiMesh.indices, false)
+    await nv1.loadFromArrayBuffer(initialNiiMeshBuffer, 'trefoil.mz3')
+    const { outputMesh: smoothedMesh } = await smoothRemesh(repairedMesh, { newtonIterations: 1, numberPoints: 75 });
+    const niiMesh = iwm2meshCore(smoothedMesh);
     loadingCircle.classList.add("hidden");
     while (nv1.meshes.length > 0) {
       nv1.removeMesh(nv1.meshes[0]);
      }
-    const meshBuffer = NVMeshUtilities.createMZ3(niiMesh.positions, niiMesh.indices,  false)
+    const meshBuffer = NVMeshUtilities.createMZ3(niiMesh.positions, niiMesh.indices, false)
     await nv1.loadFromArrayBuffer(meshBuffer, 'trefoil.mz3')
-    nv1.reverseFaces(0);
   };
   saveMeshBtn.onclick = function () {
     if (nv1.meshes.length < 1) {

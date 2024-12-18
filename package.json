@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@itk-wasm/cuberille": "^0.1.0",
+    "@itk-wasm/mesh-filters": "^0.1.0",
     "@niivue/cbor-loader": "^1.1.0",
     "@niivue/niimath": "^0.1.1",
     "@niivue/niivue": "^0.44.2",

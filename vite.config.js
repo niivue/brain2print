@@ -11,6 +11,6 @@ export default defineConfig({
   },
   // exclude @niivue/niimath from optimization
   optimizeDeps: {
-    exclude: ["@niivue/niimath", "@itk-wasm/cuberille"],
+    exclude: ["@niivue/niimath", "@itk-wasm/cuberille", "@itk-wasm/mesh-filters"],
   },
 });
