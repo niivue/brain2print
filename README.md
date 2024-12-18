@@ -15,8 +15,6 @@ This is an extension of [brainchop](https://github.com/neuroneural/brainchop) th
 
   - ![settings dialog](Settings.png)
 
-  - Fill bubbles will remove any cavities. This includes large cavities such as the brain's ventricles.
-  - The `Largest cluster only` will only extract a single mesh.
   - You can choose `Smoothing` to make the surfaces less jagged at the expense of computation time.
   - You can choose to `Simplify` to reduce the number of triangles and create smaller files.
 

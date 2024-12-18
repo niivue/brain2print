@@ -11,10 +11,6 @@ import { nii2iwi, iwm2meshCore } from "@niivue/cbor-loader";
 async function main() {
   const niimath = new Niimath();
   await niimath.init();
-  // const wrapper = await NiiMathWrapper.load()
-  /*smoothCheck.onchange = function () {
-    nv1.setInterpolation(!smoothCheck.checked)
-  }*/
   aboutBtn.onclick = function () {
     const url = "https://github.com/niivue/brain2print";
     window.open(url, "_blank");
@@ -228,11 +224,6 @@ async function main() {
   };
   applyBtn.onclick = async function () {
     const volIdx = nv1.volumes.length - 1
-    const niiBuffer = await nv1.saveImage({
-      volumeByIndex: volIdx,
-    }).buffer;
-    const niiBlob = new Blob([niiBuffer], { type: "application/octet-stream" });
-    const niiFile = new File([niiBlob], "input.nii");
     loadingCircle.classList.remove("hidden");
     const hdr = nv1.volumes[volIdx].hdr;
     const img = nv1.volumes[volIdx].img;
@@ -246,7 +237,9 @@ async function main() {
     const initialNiiMesh = iwm2meshCore(repairedMesh);
     const initialNiiMeshBuffer = NVMeshUtilities.createMZ3(initialNiiMesh.positions, initialNiiMesh.indices, false)
     await nv1.loadFromArrayBuffer(initialNiiMeshBuffer, 'trefoil.mz3')
-    const { outputMesh: smoothedMesh } = await smoothRemesh(repairedMesh, { newtonIterations: 1, numberPoints: 75 });
+    const smooth = parseInt(smoothSlide.value)
+    const shrink = parseFloat(shrinkPct.value)
+    const { outputMesh: smoothedMesh } = await smoothRemesh(repairedMesh, { newtonIterations: smooth, numberPoints: shrink });
     const niiMesh = iwm2meshCore(smoothedMesh);
     loadingCircle.classList.add("hidden");
     while (nv1.meshes.length > 0) {
