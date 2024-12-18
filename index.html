@@ -10,6 +10,8 @@
 
 <body>
   <header>
+    <label><strong>Visualization:</strong></label>
+    &nbsp;
     <label for="clipCheck">Clip Plane</label>
     <input type="checkbox" id="clipCheck" unchecked />
     <label for="opacitySlider0">Background Opacity</label>
@@ -18,16 +20,23 @@
     <label for="opacitySlider1">Overlay Opacity</label>
     <input title="Control transparency of colored voxel-based segmentation" type="range" min="0" max="255" value="128" class="slider" id="opacitySlider1" />
     &nbsp;
+    <br>
+    <label><strong>Generation:</strong></label>
+    &nbsp;&nbsp;&nbsp;&nbsp;
     <label for="modelSelect">Segmentation Model</label>
     <select id="modelSelect">
     </select>
     &nbsp;
     <button id="createMeshBtn">Create Mesh</button>
     &nbsp;
+    <br>
+    <label><strong>Save results:</strong></label>
+    &nbsp;&nbsp;
     <button id="saveBtn">Save Image</button>
     &nbsp;
     <button id="saveMeshBtn">Save Mesh</button>
     &nbsp;
+    <br>
     <button id="aboutBtn">About</button>
     &nbsp;
     <label for="workerCheck"  hidden>Use Webworker</label>
@@ -69,7 +78,7 @@
       </p>
       <p>
         <label>Simplify Percent (10..150)</label>
-        <input title="triangle reduction reduces the file size but can reduce mesh quality" id="shrinkPct" type="number" min="10"  value="75" max="150">
+        <input title="triangle reduction reduces the file size and computation time but can reduce mesh quality, smaller values result in a smaller mesh" id="shrinkPct" type="number" min="10"  value="75" max="150">
       </p>
       <button id="cancelBtn" formmethod="dialog">Cancel</button>
       <button autofocus id="applyBtn" value="default">Apply</button>
