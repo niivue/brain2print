@@ -250,7 +250,7 @@ async function main() {
 
     const { mesh } = await antiAliasCuberille(itkImage, { noClosing: true });
     meshProcessingMsg.textContent = "Generating manifold"
-    const { outputMesh: repairedMesh } = await repair(mesh);
+    const { outputMesh: repairedMesh } = await repair(mesh, { maximumHoleArea: 50.0 });
     meshProcessingMsg.textContent = "Keep largest mesh component"
     const { outputMesh: largestOnly } = await keepLargestComponent(repairedMesh)
     while (nv1.meshes.length > 0) {
