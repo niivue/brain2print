@@ -18,6 +18,7 @@
     "gl-matrix": "^3.4.3"
   },
   "devDependencies": {
-    "vite": "^5.4.2"
+    "vite": "^5.4.2",
+    "vite-plugin-static-copy": "^2.2.0"
   }
 }

@@ -4,9 +4,23 @@ import { Niimath } from "@niivue/niimath";
 import { inferenceModelsList, brainChopOpts } from "./brainchop-parameters.js";
 import { isChrome, localSystemDetails } from "./brainchop-telemetry.js";
 import MyWorker from "./brainchop-webworker.js?worker";
-import { antiAliasCuberille } from "@itk-wasm/cuberille";
-import { repair, smoothRemesh, keepLargestComponent } from "@itk-wasm/mesh-filters";
+import {
+  antiAliasCuberille,
+  setPipelinesBaseUrl as setCuberillePipelinesUrl
+} from "@itk-wasm/cuberille";
+import {
+  repair,
+  smoothRemesh,
+  keepLargestComponent,
+  setPipelinesBaseUrl as setMeshFiltersPipelinesUrl,
+} from "@itk-wasm/mesh-filters";
 import { nii2iwi, iwm2meshCore } from "@niivue/cbor-loader";
+
+// Use local, vendored WebAssembly module assets
+const viteBaseUrl = import.meta.env.BASE_URL
+const pipelinesBaseUrl = new URL(`${viteBaseUrl}pipelines`, document.location.origin).href
+setCuberillePipelinesUrl(pipelinesBaseUrl)
+setMeshFiltersPipelinesUrl(pipelinesBaseUrl)
 
 async function main() {
   const niimath = new Niimath();
