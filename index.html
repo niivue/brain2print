@@ -27,14 +27,14 @@
     <select id="modelSelect">
     </select>
     &nbsp;
-    <button id="createMeshBtn">Create Mesh</button>
+    <button disabled id="createMeshBtn">Create Mesh</button>
     &nbsp;
     <br>
     <label><strong>Save results:</strong></label>
     &nbsp;&nbsp;
-    <button id="saveBtn">Save Image</button>
+    <button disabled id="saveBtn">Save Image</button>
     &nbsp;
-    <button id="saveMeshBtn">Save Mesh</button>
+    <button disabled id="saveMeshBtn">Save Mesh</button>
     &nbsp;
     <br>
     <button id="aboutBtn">About</button>
@@ -43,6 +43,7 @@
     <input type="checkbox"  hidden title="webworkers are faster but not supported by all browsers" id="workerCheck" checked />
     &nbsp;
     <div id="loadingCircle" class="loading-circle hidden"></div>
+    <label id="meshProcessingMsg" class="hidden"></label>
 
   </header>
   <main id="canvas-container">

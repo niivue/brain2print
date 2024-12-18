@@ -161,6 +161,8 @@ async function main() {
     }
     overlayVolume.opacity = opacitySlider1.value / 255;
     await nv1.addVolume(overlayVolume);
+    saveBtn.disabled = false
+    createMeshBtn.disabled = false
   }
   async function reportTelemetry(statData) {
     if (typeof statData === "string" || statData instanceof String) {
@@ -225,10 +227,13 @@ async function main() {
   applyBtn.onclick = async function () {
     const volIdx = nv1.volumes.length - 1
     loadingCircle.classList.remove("hidden");
+    meshProcessingMsg.classList.remove("hidden")
+    meshProcessingMsg.textContent = "Generating mesh from segmentation"
     const hdr = nv1.volumes[volIdx].hdr;
     const img = nv1.volumes[volIdx].img;
     const itkImage = nii2iwi(hdr, img, false);
     itkImage.size = itkImage.size.map(Number);
+
     const { mesh } = await antiAliasCuberille(itkImage, { noClosing: true });
     const { outputMesh: repairedMesh } = await repair(mesh);
     while (nv1.meshes.length > 0) {
@@ -237,11 +242,15 @@ async function main() {
     const initialNiiMesh = iwm2meshCore(repairedMesh);
     const initialNiiMeshBuffer = NVMeshUtilities.createMZ3(initialNiiMesh.positions, initialNiiMesh.indices, false)
     await nv1.loadFromArrayBuffer(initialNiiMeshBuffer, 'trefoil.mz3')
+    saveMeshBtn.disabled = false
+
+    meshProcessingMsg.textContent = "Smoothing and remeshing"
     const smooth = parseInt(smoothSlide.value)
     const shrink = parseFloat(shrinkPct.value)
     const { outputMesh: smoothedMesh } = await smoothRemesh(repairedMesh, { newtonIterations: smooth, numberPoints: shrink });
     const niiMesh = iwm2meshCore(smoothedMesh);
     loadingCircle.classList.add("hidden");
+    meshProcessingMsg.classList.add("hidden");
     while (nv1.meshes.length > 0) {
       nv1.removeMesh(nv1.meshes[0]);
      }
