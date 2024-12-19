@@ -1,6 +1,4 @@
 import { Niivue, NVMeshUtilities } from "@niivue/niivue";
-import { Niimath } from "@niivue/niimath";
-// import {runInference } from './brainchop-mainthread.js'
 import { inferenceModelsList, brainChopOpts } from "./brainchop-parameters.js";
 import { isChrome, localSystemDetails } from "./brainchop-telemetry.js";
 import MyWorker from "./brainchop-webworker.js?worker";
@@ -23,20 +21,10 @@ setCuberillePipelinesUrl(pipelinesBaseUrl)
 setMeshFiltersPipelinesUrl(pipelinesBaseUrl)
 
 async function main() {
-  const niimath = new Niimath();
-  await niimath.init();
   aboutBtn.onclick = function () {
     const url = "https://github.com/niivue/brain2print";
     window.open(url, "_blank");
   };
-  /*diagnosticsBtn.onclick = function () {
-    if (diagnosticsString.length < 1) {
-      window.alert('No diagnostic string generated: run a model to create diagnostics')
-      return
-    }
-    navigator.clipboard.writeText(diagnosticsString)
-    window.alert('Diagnostics copied to clipboard\n' + diagnosticsString)
-  }*/
   opacitySlider0.oninput = function () {
     nv1.setOpacity(0, opacitySlider0.value / 255);
     nv1.updateGLVolume();
@@ -73,7 +61,6 @@ async function main() {
         .getParameter(rendererInfo.UNMASKED_RENDERER_WEBGL)
         .includes("NVIDIA");
     }
-
     let opts = brainChopOpts;
     opts.rootURL = location.href;
     const isLocalhost = Boolean(
@@ -115,8 +102,7 @@ async function main() {
           callbackUI(
             event.data.message,
             event.data.progressFrac,
-            event.data.modalMessage,
-            event.data.statData
+            event.data.modalMessage
           );
         }
         if (cmd === "img") {
@@ -129,7 +115,6 @@ async function main() {
       console.log(
         "Only provided with webworker code, see main brainchop github repository for main thread code"
       );
-      // runInference(opts, model, nv1.volumes[0].hdr, nv1.volumes[0].img, callbackImg, callbackUI)
     }
   };
   saveBtn.onclick = function () {
@@ -178,30 +163,10 @@ async function main() {
     saveBtn.disabled = false
     createMeshBtn.disabled = false
   }
-  async function reportTelemetry(statData) {
-    if (typeof statData === "string" || statData instanceof String) {
-      function strToArray(str) {
-        const list = JSON.parse(str);
-        const array = [];
-        for (const key in list) {
-          array[key] = list[key];
-        }
-        return array;
-      }
-      statData = strToArray(statData);
-    }
-    statData = await localSystemDetails(statData, nv1.gl);
-    diagnosticsString =
-      ":: Diagnostics can help resolve issues https://github.com/neuroneural/brainchop/issues ::\n";
-    for (var key in statData) {
-      diagnosticsString += key + ": " + statData[key] + "\n";
-    }
-  }
   function callbackUI(
     message = "",
     progressFrac = -1,
-    modalMessage = "",
-    statData = []
+    modalMessage = ""
   ) {
     if (message !== "") {
       console.log(message);
@@ -216,9 +181,6 @@ async function main() {
     }
     if (modalMessage !== "") {
       window.alert(modalMessage);
-    }
-    if (Object.keys(statData).length > 0) {
-      reportTelemetry(statData);
     }
   }
   function handleLocationChange(data) {
@@ -247,7 +209,6 @@ async function main() {
     const img = nv1.volumes[volIdx].img;
     const itkImage = nii2iwi(hdr, img, false);
     itkImage.size = itkImage.size.map(Number);
-
     const { mesh } = await antiAliasCuberille(itkImage, { noClosing: true });
     meshProcessingMsg.textContent = "Generating manifold"
     const { outputMesh: repairedMesh } = await repair(mesh, { maximumHoleArea: 50.0 });
@@ -260,7 +221,6 @@ async function main() {
     const initialNiiMeshBuffer = NVMeshUtilities.createMZ3(initialNiiMesh.positions, initialNiiMesh.indices, false)
     await nv1.loadFromArrayBuffer(initialNiiMeshBuffer, 'trefoil.mz3')
     saveMeshBtn.disabled = false
-
     meshProcessingMsg.textContent = "Smoothing and remeshing"
     const smooth = parseInt(smoothSlide.value)
     const shrink = parseFloat(shrinkPct.value)
@@ -297,8 +257,6 @@ async function main() {
     for (let i = 0; i < pts.length; i++) pts[i] *= scale;
     NVMeshUtilities.saveMesh(pts, nv1.meshes[0].tris, `mesh.${format}`, true);
   };
-
-  var diagnosticsString = "";
   var chopWorker;
   let nv1 = new Niivue(defaults);
   nv1.attachToCanvas(gl1);
@@ -316,6 +274,7 @@ async function main() {
   nv1.onImageLoaded = doLoadImage;
   modelSelect.selectedIndex = -1;
   workerCheck.checked = await isChrome(); //TODO: Safari does not yet support WebGL TFJS webworkers, test FireFox
+  console.log('brain2print 20241218')
   // uncomment next two lines to automatically run segmentation when web page is loaded
   //   modelSelect.selectedIndex = 11
   //   modelSelect.onchange()
