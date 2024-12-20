@@ -1,4 +1,4 @@
-import { Niivue, NVMeshUtilities } from "@niivue/niivue"
+import { Niivue, NVMeshUtilities, NVImage } from "@niivue/niivue"
 import { inferenceModelsList, brainChopOpts } from "./brainchop-parameters.js"
 import { isChrome, localSystemDetails } from "./brainchop-telemetry.js"
 import MyWorker from "./brainchop-webworker.js?worker"
@@ -206,23 +206,32 @@ async function main() {
   }
   applyBtn.onclick = async function () {
     const volIdx = nv1.volumes.length - 1
-    const hdr = nv1.volumes[volIdx].hdr
-    const img = nv1.volumes[volIdx].img
+    let hdr = nv1.volumes[volIdx].hdr
+    let img = nv1.volumes[volIdx].img
     let hollowInt = Number(hollowSelect.value )
     if (hollowInt < 0){
-      // append the hollow operation to the image processor
-      // but dont run it yet. 
+      const vol = nv1.volumes[volIdx]
       const niiBuffer = await nv1.saveImage({volumeByIndex: nv1.volumes.length - 1}).buffer
       const niiBlob = new Blob([niiBuffer], { type: 'application/octet-stream' })
       const niiFile = new File([niiBlob], 'input.nii')
-      // get an ImageProcessor instance from niimath
-      console.log('buffer', niiBuffer)
+      // with niimath wasm ZLIB builds, isGz seems to be the default output type:
+      // see: https://github.com/rordenlab/niimath/blob/9f3a301be72c331b90ef5baecb7a0232e9b47ba4/src/core.c#L201
+      // also added new option to set outputDataType in niimath in version 0.3.0 (published 20 Dec 2024)
+      niimath.setOutputDataType('input') // call before setting image since this is passed to the image constructor
       let image = niimath.image(niiFile)
       image = image.hollow(0.5, hollowInt)
-      console.log('niimath mesh operation', image.commands)
-      const outFile = await image.run('output.nii')
-      console.log('ToDo: 1. convert outfile to hdr and img 2. do not return')
-      return
+      // must use .gz extension because niimath will create .nii.gz by default, so
+      // wasm file system commands will look for this, not .nii. 
+      // Error 44 will happen otherwise (file not found error)
+      const outBlob = await image.run('output.nii.gz') 
+      let outFile = new File([outBlob], 'hollow.nii.gz')
+      const outVol = await NVImage.loadFromFile({
+        file: outFile,
+        name: outFile.name
+      })
+      
+      hdr = outVol.hdr
+      img = outVol.img
     }
     loadingCircle.classList.remove("hidden")
     meshProcessingMsg.classList.remove("hidden")
