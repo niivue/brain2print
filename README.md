@@ -42,6 +42,7 @@ npm run build
 
 This web page combines three packages developed by our team:
 
-- [brainchop](https://github.com/neuroneural/brainchop) AI models for tissue segmentation.
-- [niivue](https://github.com/niivue/niivue) reading images and visualization
-- [ITK-Wasm](https://github.com/InsightSoftwareConsortium/ITK-Wasm) for voxel-to-mesh and mesh processing
+- [brainchop](https://github.com/neuroneural/brainchop) AI models for tissue segmentation. [Citation](https://pubmed.ncbi.nlm.nih.gov/39301517/).
+- [niimath](https://github.com/rordenlab/niimath) for creating hollow objects. [Citation](https://pubmed.ncbi.nlm.nih.gov/39268148/).
+- [niivue](https://github.com/niivue/niivue) reading images and visualization.
+- [ITK-Wasm](https://github.com/InsightSoftwareConsortium/ITK-Wasm) for voxel-to-mesh and mesh processing. [Citation](https://proceedings.scipy.org/articles/TCFJ5130.
