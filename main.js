@@ -255,7 +255,8 @@ async function main() {
     const smooth = parseInt(smoothSlide.value)
     const shrink = parseFloat(shrinkPct.value)
     const { outputMesh: smoothedMesh } = await smoothRemesh(largestOnly, { newtonIterations: smooth, numberPoints: shrink })
-    const niiMesh = iwm2meshCore(smoothedMesh)
+    const { outputMesh: smoothedRepairedMesh } = await repair(smoothedMesh, { maximumHoleArea: 50.0 })
+    const niiMesh = iwm2meshCore(smoothedRepairedMesh)
     loadingCircle.classList.add("hidden")
     meshProcessingMsg.classList.add("hidden")
     while (nv1.meshes.length > 0) {
