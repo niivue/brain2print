@@ -66,6 +66,19 @@
   <dialog id="remeshDialog">
     <form method="dialog">
       <p>
+        <label>
+          Hollow:
+          <select id="hollowSelect" title="hollow meshes require less material but may be fragile">
+            <option value="0" selected>False: solid</option>
+            <option value="-1">1mm</option>
+            <option value="-2">2mm</option>
+            <option value="-4">4mm</option>
+            <option value="-8">8mm</option>
+            <option value="-16">16mm</option>
+          </select>
+        </label>
+      </p>
+      <p>
         <label for="smoothSlide">Smoothing</label>
         <input
           type="range"
@@ -79,7 +92,7 @@
       </p>
       <p>
         <label>Simplify Percent (10..150)</label>
-        <input title="triangle reduction reduces the file size and computation time but can reduce mesh quality, smaller values result in a smaller mesh" id="shrinkPct" type="number" min="10"  value="75" max="150">
+        <input title="triangle reduction reduces the file size and computation time but can reduce mesh quality, smaller values result in a smaller mesh" id="shrinkPct" type="number" min="10"  value="25" max="150">
       </p>
       <button id="cancelBtn" formmethod="dialog">Cancel</button>
       <button autofocus id="applyBtn" value="default">Apply</button>
