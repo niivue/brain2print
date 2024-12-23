@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@niivue/niimath": "^0.3.0",
+    "@niivue/niimath": "^1.0.0",
     "@itk-wasm/cuberille": "^0.2.0",
     "@itk-wasm/mesh-filters": "^0.2.0",
     "@niivue/cbor-loader": "^1.1.0",

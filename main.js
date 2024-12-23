@@ -21,6 +21,40 @@ const pipelinesBaseUrl = new URL(`${viteBaseUrl}pipelines`, document.location.or
 setCuberillePipelinesUrl(pipelinesBaseUrl)
 setMeshFiltersPipelinesUrl(pipelinesBaseUrl)
 
+function isDesktopModeiPad() {
+  const ua = navigator.userAgent;
+  return (
+    ua.includes("Macintosh") &&
+    navigator.maxTouchPoints &&
+    navigator.maxTouchPoints > 1
+  );
+}
+
+function getAppleDeviceType() {
+  const ua = navigator.userAgent;
+  console.log(ua)
+
+  // test for desktop based safari
+  if (ua.includes("Macintosh")) {
+    return true
+  }
+
+  if (/iPad/.test(ua)) {
+    return true
+  }
+
+  if (isDesktopModeiPad()) {
+    return true
+  }
+
+  if (/iPhone/.test(ua)) {
+    alert("brain2print is not supported on some mobile devices yet. Please use a desktop browser or tablet.")
+    return false
+  }
+
+  return false
+}
+
 async function main() {
   const niimath = new Niimath()
   await niimath.init()
@@ -304,7 +338,19 @@ async function main() {
   }
   nv1.onImageLoaded = doLoadImage
   modelSelect.selectedIndex = -1
-  workerCheck.checked = await isChrome(); //TODO: Safari does not yet support WebGL TFJS webworkers, test FireFox
+  // workerCheck.checked = await isChrome(); TODO: test firefox
+  // modern iPadOS Safari requests the site as if it were a desktop browser by default,
+  // and these devices are more capable than iPhones so we should allow them. 
+  // Desktop Safari is also supported.
+  workerCheck.checked = getAppleDeviceType()
+  // now check for isChrome
+  workerCheck.checked = !workerCheck.checked ? await isChrome() : workerCheck.checked
+  // if the worker is not checked, then no segmentation will be performed. 
+  // Previously this was a silent failure, but it is probably better to alert the user.
+  if (!workerCheck.checked) {
+    alert("brain2print may not be able to reliably run segmentation in your browser. Segmentation will not be performed.")
+  }
+
   console.log('brain2print 20241218')
   // uncomment next two lines to automatically run segmentation when web page is loaded
   //   modelSelect.selectedIndex = 11
