@@ -21,6 +21,10 @@ var niimathOperators_default = {
     args: [],
     help: "round voxels upwards to the nearest integer"
   },
+  ras: {
+    args: [],
+    help: "reorder and flip dimensions to RAS orientation"
+  },
   conform: {
     args: [],
     help: "reslice to 1mm size in coronal slice direction with 256^3 voxels"
@@ -74,6 +78,12 @@ var niimathOperators_default = {
   floor: {
     args: [],
     help: "round voxels downwards to the nearest integer"
+  },
+  gz: {
+    args: [
+      "mode"
+    ],
+    help: "NIfTI gzip mode (0=uncompressed, 1=compressed, else FSL environment; default -1)"
   },
   h2c: {
     args: [],
@@ -222,7 +232,7 @@ var niimathOperators_default = {
       "sigma",
       "scl"
     ],
-    help: "edge enhancing unsharp mask (sigma in mm, not voxels; 1.0 is typical)"
+    help: "edge enhancing unsharp mask (sigma in mm, not voxels [1 is typical]; scl is amount [0.5 medium, 1.0 heavy])"
   },
   dog: {
     args: [
