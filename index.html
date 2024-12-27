@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="./niivue.css" />
   <title>brain2print</title>
-  <script type="module" crossorigin src="./assets/index-BKBbR1az.js"></script>
+  <script type="module" crossorigin src="./assets/index-BcyWIDPe.js"></script>
 </head>
 
 <body>
@@ -80,6 +80,25 @@
         </label>
       </p>
       <p>
+        <label>
+          Quality:
+          <select id="qualitySelect" title="choose better or faster meshing">
+            <option value="0">faster (can create defects)</option>
+            <option value="1" selected>better</option>
+          </select>
+        </label>
+      </p>
+      <p id="largestClusterGroup">
+        <label>&nbsp;Largest cluster only</label><input type="checkbox" id="largestCheck" unchecked/>
+      </p>
+      <p id="bubbleGroup">
+        <label>&nbsp;Fill bubbles</label><input type="checkbox" id="bubbleCheck" unchecked/>
+      </p>
+      <p id="closeGroup">
+        <label>Closing (mm)</label>
+        <input id="closeMM" type="number" min="0"  value="4" max="100">
+      </p>
+      <p>
         <label for="smoothSlide">Smoothing</label>
         <input
           type="range"
@@ -92,8 +111,8 @@
         />
       </p>
       <p>
-        <label>Simplify Percent (10..150)</label>
-        <input title="triangle reduction reduces the file size and computation time but can reduce mesh quality, smaller values result in a smaller mesh" id="shrinkPct" type="number" min="10"  value="25" max="150">
+        <label>Simplify Percent (10..100)</label>
+        <input title="triangle reduction reduces the file size and computation time but can reduce mesh quality, smaller values result in a smaller mesh" id="shrinkPct" type="number" min="10"  value="25" max="100">
       </p>
       <button id="cancelBtn" formmethod="dialog">Cancel</button>
       <button autofocus id="applyBtn" value="default">Apply</button>
