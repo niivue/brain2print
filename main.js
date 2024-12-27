@@ -199,6 +199,7 @@ async function main() {
   }
   createMeshBtn.onclick = function () {
     if (nv1.meshes.length > 0) nv1.removeMesh(nv1.meshes[0])
+    saveMeshBtn.disabled = true
     if (nv1.volumes.length < 1) {
       window.alert("Image not loaded. Drag and drop an image.")
     } else {
@@ -283,7 +284,6 @@ async function main() {
         file: outFile,
         name: outFile.name
       })
-      
       hdr = outVol.hdr
       img = outVol.img
     }
@@ -303,7 +303,6 @@ async function main() {
     const initialNiiMesh = iwm2meshCore(largestOnly)
     const initialNiiMeshBuffer = NVMeshUtilities.createMZ3(initialNiiMesh.positions, initialNiiMesh.indices, false)
     await nv1.loadFromArrayBuffer(initialNiiMeshBuffer, 'trefoil.mz3')
-    saveMeshBtn.disabled = false
     meshProcessingMsg.textContent = "Smoothing and remeshing"
     const smooth = parseInt(smoothSlide.value)
     const shrink = parseFloat(shrinkPct.value)
@@ -358,6 +357,9 @@ async function main() {
   }
   qualitySelect.onchange()
   nv1.onImageLoaded = doLoadImage
+  nv1.onMeshLoaded = (volume) => {
+    saveMeshBtn.disabled = false
+  }
   modelSelect.selectedIndex = -1
   workerCheck.checked = await isChrome() //TODO: Safari does not yet support WebGL TFJS webworkers, test FireFox
   console.log('brain2print 20241218')
