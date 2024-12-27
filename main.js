@@ -24,6 +24,7 @@ setMeshFiltersPipelinesUrl(pipelinesBaseUrl)
 async function main() {
   const niimath = new Niimath()
   await niimath.init()
+  niimath.setOutputDataType('input') // call before setting image since this is passed to the image constructor
   aboutBtn.onclick = function () {
     const url = "https://github.com/niivue/brain2print"
     window.open(url, "_blank")
@@ -153,7 +154,7 @@ async function main() {
       let cmap = await fetchJSON(modelEntry.colormapPath)
       overlayVolume.setColormapLabel(cmap)
       // n.b. most models create indexed labels, but those without colormap mask scalar input
-      overlayVolume.hdr.intent_code = 1002; // NIFTI_INTENT_LABEL
+      overlayVolume.hdr.intent_code = 1002 // NIFTI_INTENT_LABEL
     } else {
       let colormap = opts.atlasSelectedColorTable.toLowerCase()
       const cmaps = nv1.colormaps()
@@ -204,7 +205,64 @@ async function main() {
       remeshDialog.show()
     }
   }
+  qualitySelect.onchange = function () {
+    const isBetterQuality = Boolean(Number(qualitySelect.value))
+    const opacity = 1.0 - (0.5 * Number(isBetterQuality))
+    largestCheck.disabled = isBetterQuality
+    largestClusterGroup.style.opacity = opacity
+    bubbleCheck.disabled = isBetterQuality
+    bubbleGroup.style.opacity = opacity
+    closeMM.disabled = isBetterQuality
+    closeGroup.style.opacity = opacity
+  }
   applyBtn.onclick = async function () {
+    const isBetterQuality = Boolean(Number(qualitySelect.value))
+    const startTime = performance.now()
+    if (isBetterQuality)
+      await applyQuality()
+    else
+      await applyFaster()
+    console.log(`Execution time: ${Math.round(performance.now() - startTime)} ms`)
+  }
+  async function applyFaster() {
+    const niiBuffer = await nv1.saveImage({volumeByIndex: nv1.volumes.length - 1}).buffer
+    const niiFile = new File([niiBuffer], 'image.nii')
+    let processor = niimath.image(niiFile)
+    loadingCircle.classList.remove('hidden')
+    //mesh with specified isosurface
+    const isoValue = 0.5
+    //const largestCheckValue = largestCheck.checked
+    let reduce = Math.min(Math.max(Number(shrinkPct.value) / 100, 0.01), 1)
+    let hollowSz = Number(hollowSelect.value )
+    let closeSz = Number(closeMM.value)
+    const pixDim = Math.min(Math.min(nv1.volumes[0].hdr.pixDims[1],nv1.volumes[0].hdr.pixDims[2]), nv1.volumes[0].hdr.pixDims[3])
+    if ((pixDim < 0.2) && ((hollowSz !== 0) || (closeSz !== 0))) {
+      hollowSz *= pixDim
+      closeSz *= pixDim
+      console.log('Very small pixels, scaling hollow and close values by ', pixDim)
+    }
+    if (hollowSz < 0) {
+      processor = processor.hollow(0.5, hollowSz)
+    }
+    if ((isFinite(closeSz)) && (closeSz > 0)){
+      processor = processor.close(isoValue, closeSz, 2 * closeSz)
+    }
+    processor = processor.mesh({
+      i: isoValue,
+      l: largestCheck.checked ? 1 : 0,
+      r: reduce,
+      b: bubbleCheck.checked ? 1 : 0
+    })
+    console.log('niimath operation', processor.commands)
+    const retBlob = await processor.run('test.mz3')
+    const arrayBuffer = await retBlob.arrayBuffer()
+    loadingCircle.classList.add('hidden')
+    if (nv1.meshes.length > 0)
+      nv1.removeMesh(nv1.meshes[0])
+    await nv1.loadFromArrayBuffer(arrayBuffer, 'test.mz3')
+    nv1.reverseFaces(0)
+  }
+  async function applyQuality() {
     const volIdx = nv1.volumes.length - 1
     let hdr = nv1.volumes[volIdx].hdr
     let img = nv1.volumes[volIdx].img
@@ -214,17 +272,13 @@ async function main() {
       const niiBuffer = await nv1.saveImage({volumeByIndex: nv1.volumes.length - 1}).buffer
       const niiBlob = new Blob([niiBuffer], { type: 'application/octet-stream' })
       const niiFile = new File([niiBlob], 'input.nii')
-      // with niimath wasm ZLIB builds, isGz seems to be the default output type:
-      // see: https://github.com/rordenlab/niimath/blob/9f3a301be72c331b90ef5baecb7a0232e9b47ba4/src/core.c#L201
-      // also added new option to set outputDataType in niimath in version 0.3.0 (published 20 Dec 2024)
       niimath.setOutputDataType('input') // call before setting image since this is passed to the image constructor
       let image = niimath.image(niiFile)
+      image = image.gz(0)
+      image = image.ras()
       image = image.hollow(0.5, hollowInt)
-      // must use .gz extension because niimath will create .nii.gz by default, so
-      // wasm file system commands will look for this, not .nii. 
-      // Error 44 will happen otherwise (file not found error)
-      const outBlob = await image.run('output.nii.gz') 
-      let outFile = new File([outBlob], 'hollow.nii.gz')
+      const outBlob = await image.run('output.nii') 
+      let outFile = new File([outBlob], 'hollow.nii')
       const outVol = await NVImage.loadFromFile({
         file: outFile,
         name: outFile.name
@@ -236,7 +290,6 @@ async function main() {
     loadingCircle.classList.remove("hidden")
     meshProcessingMsg.classList.remove("hidden")
     meshProcessingMsg.textContent = "Generating mesh from segmentation"
-
     const itkImage = nii2iwi(hdr, img, false)
     itkImage.size = itkImage.size.map(Number)
     const { mesh } = await antiAliasCuberille(itkImage, { noClosing: true })
@@ -254,6 +307,7 @@ async function main() {
     meshProcessingMsg.textContent = "Smoothing and remeshing"
     const smooth = parseInt(smoothSlide.value)
     const shrink = parseFloat(shrinkPct.value)
+    console.log(`smoothing iterations ${smooth} shrink percent ${shrink}`)
     const { outputMesh: smoothedMesh } = await smoothRemesh(largestOnly, { newtonIterations: smooth, numberPoints: shrink })
     const { outputMesh: smoothedRepairedMesh } = await repair(smoothedMesh, { maximumHoleArea: 50.0 })
     const niiMesh = iwm2meshCore(smoothedRepairedMesh)
@@ -302,13 +356,14 @@ async function main() {
     option.value = inferenceModelsList[i].id.toString()
     modelSelect.appendChild(option)
   }
+  qualitySelect.onchange()
   nv1.onImageLoaded = doLoadImage
   modelSelect.selectedIndex = -1
-  workerCheck.checked = await isChrome(); //TODO: Safari does not yet support WebGL TFJS webworkers, test FireFox
+  workerCheck.checked = await isChrome() //TODO: Safari does not yet support WebGL TFJS webworkers, test FireFox
   console.log('brain2print 20241218')
   // uncomment next two lines to automatically run segmentation when web page is loaded
-  //   modelSelect.selectedIndex = 11
-  //   modelSelect.onchange()
+  // modelSelect.selectedIndex = 11
+  // modelSelect.onchange()
 }
 
 main()
