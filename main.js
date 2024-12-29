@@ -76,56 +76,49 @@ async function main() {
           /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
         )
     )
-    if (isLocalhost) opts.rootURL = location.protocol + "//" + location.host
-    if (workerCheck.checked) {
-      if (typeof chopWorker !== "undefined") {
-        console.log(
-          "Unable to start new segmentation: previous call has not completed"
-        )
-        return
-      }
-      chopWorker = await new MyWorker({ type: "module" })
-      let hdr = {
-        datatypeCode: nv1.volumes[0].hdr.datatypeCode,
-        dims: nv1.volumes[0].hdr.dims,
-      }
-      let msg = {
-        opts: opts,
-        modelEntry: model,
-        niftiHeader: hdr,
-        niftiImage: nv1.volumes[0].img,
-      }
-      chopWorker.postMessage(msg)
-      chopWorker.onmessage = function (event) {
-        let cmd = event.data.cmd
-        if (cmd === "ui") {
-          if (event.data.modalMessage !== "") {
-            chopWorker.terminate()
-            chopWorker = undefined
-          }
-          callbackUI(
-            event.data.message,
-            event.data.progressFrac,
-            event.data.modalMessage
-          )
-        }
-        if (cmd === "img") {
+    if (isLocalhost) {
+      opts.rootURL = location.protocol + "//" + location.host
+    }
+    if (typeof chopWorker !== "undefined") {
+      console.log(
+        "Unable to start new segmentation: previous call has not completed"
+      )
+      return
+    }
+    chopWorker = await new MyWorker({ type: "module" })
+    let hdr = {
+      datatypeCode: nv1.volumes[0].hdr.datatypeCode,
+      dims: nv1.volumes[0].hdr.dims,
+    }
+    let msg = {
+      opts: opts,
+      modelEntry: model,
+      niftiHeader: hdr,
+      niftiImage: nv1.volumes[0].img,
+    }
+    chopWorker.postMessage(msg)
+    chopWorker.onmessage = function (event) {
+      let cmd = event.data.cmd
+      if (cmd === "ui") {
+        if (event.data.modalMessage !== "") {
           chopWorker.terminate()
           chopWorker = undefined
-          callbackImg(event.data.img, event.data.opts, event.data.modelEntry)
         }
+        callbackUI(
+          event.data.message,
+          event.data.progressFrac,
+          event.data.modalMessage
+        )
       }
-    } else {
-      console.log(
-        "Only provided with webworker code, see main brainchop github repository for main thread code"
-      )
+      if (cmd === "img") {
+        chopWorker.terminate()
+        chopWorker = undefined
+        callbackImg(event.data.img, event.data.opts, event.data.modelEntry)
+      }
     }
   }
   saveBtn.onclick = function () {
     nv1.volumes[1].saveToDisk("Custom.nii")
-  }
-  workerCheck.onchange = function () {
-    modelSelect.onchange()
   }
   clipCheck.onchange = function () {
     if (clipCheck.checked) {
@@ -361,7 +354,6 @@ async function main() {
     saveMeshBtn.disabled = false
   }
   modelSelect.selectedIndex = -1
-  workerCheck.checked = await isChrome() //TODO: Safari does not yet support WebGL TFJS webworkers, test FireFox
   console.log('brain2print 20241218')
   // uncomment next two lines to automatically run segmentation when web page is loaded
   // modelSelect.selectedIndex = 11
