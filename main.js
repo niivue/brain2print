@@ -354,7 +354,7 @@ async function main() {
     saveMeshBtn.disabled = false
   }
   modelSelect.selectedIndex = -1
-  console.log('brain2print 20241229')
+  console.log('brain2print 20241230')
   // uncomment next two lines to automatically run segmentation when web page is loaded
   // modelSelect.selectedIndex = 11
   // modelSelect.onchange()
