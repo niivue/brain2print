@@ -21,6 +21,30 @@ const pipelinesBaseUrl = new URL(`${viteBaseUrl}pipelines`, document.location.or
 setCuberillePipelinesUrl(pipelinesBaseUrl)
 setMeshFiltersPipelinesUrl(pipelinesBaseUrl)
 
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open("app-static-v1").then((cache) => {
+      return cache.addAll([
+        "./", 
+        "./index.html", 
+        "./manifest.json", 
+        "./models",
+        "./pipelines",
+        "./assets",
+        "./t1_crop.nii.gz",
+        "./niivue.css"]);
+    })
+  );
+});
+
+self.addEventListener("fetch", (event) => {
+  event.respondWith(
+    caches.match(event.request).then((response) => {
+      return response || fetch(event.request);
+    })
+  );
+});
+
 async function main() {
   const niimath = new Niimath()
   await niimath.init()
