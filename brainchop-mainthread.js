@@ -1850,7 +1850,7 @@ async function inferenceFullVolumePhase1(
           }
           const Postprocess_t = ((performance.now() - startTime) / 1000).toFixed(4)
           console.log(
-            'Pre-model processing the whole brain volume in tfjs tooks for multi-class output mask : ',
+            'Pre-model processing the whole brain volume in tfjs took for multi-class output mask : ',
             ((performance.now() - inferenceStartTime) / 1000).toFixed(4) + '  Seconds'
           )
 
