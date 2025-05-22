@@ -48,6 +48,17 @@ This web page combines three packages developed by our team:
 - [niivue](https://github.com/niivue/niivue) reading images and visualization.
 - [ITK-Wasm](https://github.com/InsightSoftwareConsortium/ITK-Wasm) for voxel-to-mesh and mesh processing. [Citation](https://proceedings.scipy.org/articles/TCFJ5130.
 
+## Alternatives
+
+While brain2print provides a zero-footprint operating system independent solution, it is trained only on the most popular T1-weighted images from 1.5-3.0T MR scanners. Below are alternatives that can help with different scans:
+
+ - [ct2print.org](https://ct2print.org/) for volumes where a intensity threshold provides a meaningful isosurface.
+ - [process_brain_for_printing](https://github.com/claudebajada/process_brain_for_printing) Python script for leveraging FreeSurfer, FSL, ANTs and MRtrix.
+ - [Christopher R Madan's](https://riojournal.com/article/10398/) guide for printing using FreeSurfer and MeshLab.
+ - [niftyweb](http://niftyweb.cs.ucl.ac.uk/program.php?p=BRAIN-STEPS) provides a [cloud-based](https://cds.ismrm.org/protected/16MProceedings/PDFfiles/2201.html) alternative.
+ - [Consulting Joe](https://www.consultingjoe.com/2024/09/21/how-i-create-a-3d-model-of-my-brain-using-slicer-and-the-swiss-skull-stripper-plugin/) provides instructions for using slicer and [SwissSkullStripper](https://github.com/lassoan/SlicerSwissSkullStripper).
+ - Michael Notter shares a [shell script](https://github.com/miykael/3dprintyourbrain) for printing brain with FreeSurfer, MeshLab and FSL.
+
 ## Citation
 
-  - Rorden C, McCormick M, Hanayik T, Masoud M, Plis SM, ([2025](https://www.nature.com/articles/s41598-025-00014-5?utm_source=rct_congratemailt&utm_medium=email&utm_campaign=oa_20250505&utm_content=10.1038/s41598-025-00014-5)) brain2print AI powered web tool for creating 3D printable brain models. Scientific Reports. 15: 15664. doi:10.1038/s41598-025-00014-5
+  - Rorden C, McCormick M, Hanayik T, Masoud M, Plis SM, ([2025](https://www.nature.com/articles/s41598-025-00014-5?utm_source=rct_congratemailt&utm_medium=email&utm_campaign=oa_20250505&utm_content=10.1038/s41598-025-00014-5)) brain2print AI powered web tool for creating 3D printable brain models. Scientific Reports. 15: 15664. [PMID](https://pubmed.ncbi.nlm.nih.gov/40325035/) doi:10.1038/s41598-025-00014-5
