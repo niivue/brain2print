@@ -46,7 +46,7 @@ This web page combines three packages developed by our team:
 - [brainchop](https://github.com/neuroneural/brainchop) AI models for tissue segmentation. [Citation](https://pubmed.ncbi.nlm.nih.gov/39301517/).
 - [niimath](https://github.com/rordenlab/niimath) for creating hollow objects. [Citation](https://pubmed.ncbi.nlm.nih.gov/39268148/).
 - [niivue](https://github.com/niivue/niivue) reading images and visualization.
-- [ITK-Wasm](https://github.com/InsightSoftwareConsortium/ITK-Wasm) for voxel-to-mesh and mesh processing. [Citation](https://proceedings.scipy.org/articles/TCFJ5130.
+- [ITK-Wasm](https://github.com/InsightSoftwareConsortium/ITK-Wasm) for voxel-to-mesh and mesh processing. [Citation](https://proceedings.scipy.org/articles/TCFJ5130).
 
 ## Alternatives
 
@@ -58,6 +58,7 @@ While brain2print provides a zero-footprint operating system independent solutio
  - [niftyweb](http://niftyweb.cs.ucl.ac.uk/program.php?p=BRAIN-STEPS) provides a [cloud-based](https://cds.ismrm.org/protected/16MProceedings/PDFfiles/2201.html) alternative.
  - [Consulting Joe](https://www.consultingjoe.com/2024/09/21/how-i-create-a-3d-model-of-my-brain-using-slicer-and-the-swiss-skull-stripper-plugin/) provides instructions for using slicer and [SwissSkullStripper](https://github.com/lassoan/SlicerSwissSkullStripper).
  - Michael Notter shares a [shell script](https://github.com/miykael/3dprintyourbrain) for printing brain with FreeSurfer, MeshLab and FSL.
+ - Simon Kern [provides a docker image](https://github.com/skjerns/3dprintedbrain_docker) of Michael Notter's solution.
 
 ## Citation
 
