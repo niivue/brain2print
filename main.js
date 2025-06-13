@@ -83,6 +83,7 @@ async function main() {
     await ensureConformed()
     let model = inferenceModelsList[this.selectedIndex]
     model.isNvidia = false
+    model.isScalar = scalarCheck.checked
     const rendererInfo = nv1.gl.getExtension("WEBGL_debug_renderer_info")
     if (rendererInfo) {
       model.isNvidia = nv1.gl
@@ -151,6 +152,9 @@ async function main() {
       nv1.setClipPlane([2, 0, 90])
     }
   }
+  scalarCheck.onchange = function () {
+    modelSelect.selectedIndex = -1
+  }
   function doLoadImage() {
     saveBtn.disabled = true
     opacitySlider0.oninput()
@@ -167,18 +171,26 @@ async function main() {
     overlayVolume.hdr.scl_inter = 0
     overlayVolume.hdr.scl_slope = 1
     overlayVolume.img = new Uint8Array(img)
-    if (modelEntry.colormapPath) {
-      let cmap = await fetchJSON(modelEntry.colormapPath)
-      overlayVolume.setColormapLabel(cmap)
-      // n.b. most models create indexed labels, but those without colormap mask scalar input
-      overlayVolume.hdr.intent_code = 1002 // NIFTI_INTENT_LABEL
+    const isScalar = modelEntry.isScalar === true
+    if (isScalar) {
+      overlayVolume.hdr.scl_slope = 1 / 255
+      overlayVolume.colormap = "viridis"
     } else {
-      let colormap = opts.atlasSelectedColorTable.toLowerCase()
-      const cmaps = nv1.colormaps()
-      if (!cmaps.includes(colormap)) {
-        colormap = "actc"
+      
+      if (modelEntry.colormapPath) {
+        let cmap = await fetchJSON(modelEntry.colormapPath)
+        overlayVolume.setColormapLabel(cmap)
+        // n.b. most models create indexed labels, but those without colormap mask scalar input
+        overlayVolume.hdr.intent_code = 1002 // NIFTI_INTENT_LABEL
+      } else {
+        let colormap = opts.atlasSelectedColorTable.toLowerCase()
+        const cmaps = nv1.colormaps()
+        if (!cmaps.includes(colormap)) {
+          colormap = "actc"
+        }
+        overlayVolume.colormap = colormap
       }
-      overlayVolume.colormap = colormap
+
     }
     overlayVolume.opacity = opacitySlider1.value / 255
     await nv1.addVolume(overlayVolume)
@@ -243,12 +255,15 @@ async function main() {
     console.log(`Execution time: ${Math.round(performance.now() - startTime)} ms`)
   }
   async function applyFaster() {
-    const niiBuffer = await nv1.saveImage({volumeByIndex: nv1.volumes.length - 1}).buffer
+    const niiBuffer = await nv1.saveImage({volumeByIndex: nv1.volumes.length - 1})
     const niiFile = new File([niiBuffer], 'image.nii')
     let processor = niimath.image(niiFile)
     loadingCircle.classList.remove('hidden')
     //mesh with specified isosurface
-    const isoValue = 0.5
+    let isoValue = 0.5
+    if (nv1.volumes[nv1.volumes.length - 1].hdr.intent_code === 0) {
+      isoValue = 222 //isScalar
+    }
     //const largestCheckValue = largestCheck.checked
     let reduce = Math.min(Math.max(Number(shrinkPct.value) / 100, 0.01), 1)
     let hollowSz = Number(hollowSelect.value )

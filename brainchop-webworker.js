@@ -357,6 +357,10 @@ async function inferenceFullVolumeSeqCovLayerPhase2(
             opts,
             niftiImage
           )
+          if (modelEntry.isScalar) {
+            console.log(':::: This model ignores isScalar:::::::::::::::::::::::::')
+            modelEntry.isScalar = false
+          }
           console.log(' Phase-2 num of tensors after generateOutputSlicesV2: ', tf.memory().numTensors)
 
           tf.dispose(outLabelVolume)
@@ -568,7 +572,7 @@ async function inferenceFullVolumePhase2(
     statData.Model_Layers = await getModelNumLayers(res)
     statData.Model = modelEntry.modelName
     // statData.Extra_Info = null
-
+    const isScalar = modelEntry.isScalar === true
     const curTensor = []
     curTensor[0] = cropped_slices_3d_w_pad.reshape(adjusted_input_shape)
     // console.log("curTensor[0] :", curTensor[0].dataSync())
@@ -619,7 +623,21 @@ async function inferenceFullVolumePhase2(
         try {
           const argMaxTime = performance.now()
           console.log(' Try tf.argMax for fullVolume ..')
-          prediction_argmax = tf.argMax(curTensor[i], axis)
+          if (isScalar) {
+            const input = tf.softmax(curTensor[i], -1) // shape: [..., C], with C >= 2
+            const shape = input.shape
+            const lastDim = shape.length - 1
+            // Slice the last dimension to keep only channels 1 and onward (ignore channel 0)
+            const start = Array(lastDim).fill(0).concat(1)
+            const size = shape.slice(0, lastDim).concat(shape[lastDim] - 1)
+            const sliced = input.slice(start, size)
+            // Sum across the last dimension (collapsing the remaining classes)
+            const summed = tf.sum(sliced, lastDim)
+            // Remove any leading singleton dimensions (optional)
+            prediction_argmax = summed.squeeze() // only if you want to remove shape [1, ...]
+          } else {
+            prediction_argmax = tf.argMax(curTensor[i], axis)
+          }
           console.log('tf.argMax for fullVolume takes : ', ((performance.now() - argMaxTime) / 1000).toFixed(4))
         } catch (err1) {
           // if channel last
@@ -691,10 +709,12 @@ async function inferenceFullVolumePhase2(
         statData.Expect_Labels = expected_Num_labels
         statData.NumLabels_Match = numSegClasses === expected_Num_labels
 
-        if (numSegClasses !== expected_Num_labels) {
-          // errTxt = "expected " + expected_Num_labels + " labels, but the predicted are " + numSegClasses + ". For possible solutions please refer to <a href='https://github.com/neuroneural/brainchop/wiki/FAQ#Q3' target='_blank'><b> FAQ </b></a>.", "alert-error"
-          const errTxt = 'expected ' + expected_Num_labels + ' labels, but the predicted are ' + numSegClasses
-          callbackUI(errTxt, -1, errTxt)
+        if (!isScalar) {
+          if (numSegClasses !== expected_Num_labels) {
+            // errTxt = "expected " + expected_Num_labels + " labels, but the predicted are " + numSegClasses + ". For possible solutions please refer to <a href='https://github.com/neuroneural/brainchop/wiki/FAQ#Q3' target='_blank'><b> FAQ </b></a>.", "alert-error"
+            const errTxt = 'expected ' + expected_Num_labels + ' labels, but the predicted are ' + numSegClasses
+            callbackUI(errTxt, -1, errTxt)
+          }
         }
 
         // -- Transpose back to original unpadded size
@@ -722,11 +742,20 @@ async function inferenceFullVolumePhase2(
         )
         console.log(' outLabelVolume final shape after resizing :  ', outLabelVolume.shape)
 
+        if (isScalar) {
+          const thresh  = tf.scalar(0.04);   // threshold
+          const scale255 = tf.scalar(255.0); // if you still need the scaling step
+          const mask = outLabelVolume.greaterEqual(thresh).toFloat();
+          outLabelVolume = outLabelVolume.mul(mask);
+          outLabelVolume = outLabelVolume.mul(scale255);
+        }
         const filterOutWithPreMask = modelEntry.filterOutWithPreMask
         // To clean the skull area wrongly segmented in phase-2.
-        if (pipeline1_out != null && opts.isBrainCropMaskBased && filterOutWithPreMask) {
-          const bin = binarizeVolumeDataTensor(pipeline1_out)
-          outLabelVolume = outLabelVolume.mul(bin)
+        if (!isScalar) {
+          if (pipeline1_out != null && opts.isBrainCropMaskBased && filterOutWithPreMask) {
+            const bin = binarizeVolumeDataTensor(pipeline1_out)
+            outLabelVolume = outLabelVolume.mul(bin)
+          }
         }
 
         startTime = performance.now()
