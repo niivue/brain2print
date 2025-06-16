@@ -4,7 +4,7 @@ import { isChrome, localSystemDetails } from "./brainchop-telemetry.js"
 import MyWorker from "./brainchop-webworker.js?worker"
 import { Niimath } from "@niivue/niimath"
 import {
-  antiAliasCuberille,
+  antiAliasCuberille, cuberille,
   setPipelinesBaseUrl as setCuberillePipelinesUrl
 } from "@itk-wasm/cuberille"
 import {
@@ -240,6 +240,8 @@ async function main() {
     const opacity = 1.0 - (0.5 * Number(isBetterQuality))
     largestCheck.disabled = isBetterQuality
     largestClusterGroup.style.opacity = opacity
+    hollowGroup.style.opacity = opacity
+    hollowSelect.disabled = isBetterQuality
     bubbleCheck.disabled = isBetterQuality
     bubbleGroup.style.opacity = opacity
     closeMM.disabled = isBetterQuality
@@ -262,7 +264,7 @@ async function main() {
     //mesh with specified isosurface
     let isoValue = 0.5
     if (nv1.volumes[nv1.volumes.length - 1].hdr.intent_code === 0) {
-      isoValue = 222 //isScalar
+      isoValue = 240 //isScalar
     }
     //const largestCheckValue = largestCheck.checked
     let reduce = Math.min(Math.max(Number(shrinkPct.value) / 100, 0.01), 1)
@@ -299,10 +301,10 @@ async function main() {
     const volIdx = nv1.volumes.length - 1
     let hdr = nv1.volumes[volIdx].hdr
     let img = nv1.volumes[volIdx].img
-    let hollowInt = Number(hollowSelect.value )
+    /*let hollowInt = Number(hollowSelect.value )
     if (hollowInt < 0){
       const vol = nv1.volumes[volIdx]
-      const niiBuffer = await nv1.saveImage({volumeByIndex: nv1.volumes.length - 1}).buffer
+      const niiBuffer = await nv1.saveImage({volumeByIndex: nv1.volumes.length - 1})
       const niiBlob = new Blob([niiBuffer], { type: 'application/octet-stream' })
       const niiFile = new File([niiBlob], 'input.nii')
       niimath.setOutputDataType('input') // call before setting image since this is passed to the image constructor
@@ -318,13 +320,19 @@ async function main() {
       })
       hdr = outVol.hdr
       img = outVol.img
-    }
+    }*/
     loadingCircle.classList.remove("hidden")
     meshProcessingMsg.classList.remove("hidden")
     meshProcessingMsg.textContent = "Generating mesh from segmentation"
     const itkImage = nii2iwi(hdr, img, false)
     itkImage.size = itkImage.size.map(Number)
-    const { mesh } = await antiAliasCuberille(itkImage, { noClosing: true })
+    let mesh
+    if (nv1.volumes[nv1.volumes.length - 1].hdr.intent_code === 0) {
+      ({ mesh } = await cuberille(itkImage, { isoSurfaceValue: 240 }))
+    } else {
+      ({ mesh } = await antiAliasCuberille(itkImage, { noClosing: true }))
+    }
+
     meshProcessingMsg.textContent = "Generating manifold"
     const { outputMesh: repairedMesh } = await repair(mesh, { maximumHoleArea: 50.0 })
     meshProcessingMsg.textContent = "Keep largest mesh component"

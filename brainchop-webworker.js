@@ -624,7 +624,11 @@ async function inferenceFullVolumePhase2(
           const argMaxTime = performance.now()
           console.log(' Try tf.argMax for fullVolume ..')
           if (isScalar) {
-            const input = tf.softmax(curTensor[i], -1) // shape: [..., C], with C >= 2
+            // const input = tf.softmax(curTensor[i], -1) // shape: [..., C], with C >= 2
+            
+            const temperature = 1.2 // >1 softens, <1 sharpens
+            const input = tf.softmax(curTensor[i].div(temperature), -1)
+
             const shape = input.shape
             const lastDim = shape.length - 1
             // Slice the last dimension to keep only channels 1 and onward (ignore channel 0)
@@ -743,7 +747,7 @@ async function inferenceFullVolumePhase2(
         console.log(' outLabelVolume final shape after resizing :  ', outLabelVolume.shape)
 
         if (isScalar) {
-          const thresh  = tf.scalar(0.04);   // threshold
+          const thresh  = tf.scalar(0.10);   // threshold
           const scale255 = tf.scalar(255.0); // if you still need the scaling step
           const mask = outLabelVolume.greaterEqual(thresh).toFloat();
           outLabelVolume = outLabelVolume.mul(mask);
