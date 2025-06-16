@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="./niivue.css" />
   <link rel="manifest" href="./manifest.json" />
   <title>brain2print</title>
-  <script type="module" crossorigin src="./assets/index-DozV5v6l.js"></script>
+  <script type="module" crossorigin src="./assets/index-C4RhlPqj.js"></script>
 </head>
 
 <body>
@@ -68,19 +68,6 @@
     <form method="dialog">
       <p>
         <label>
-          Hollow:
-          <select id="hollowSelect" title="hollow meshes require less material but may be fragile">
-            <option value="0" selected>False: solid</option>
-            <option value="-2">2mm</option>
-            <option value="-3">3mm</option>
-            <option value="-4">4mm</option>
-            <option value="-8">8mm</option>
-            <option value="-16">16mm</option>
-          </select>
-        </label>
-      </p>
-      <p>
-        <label>
           Quality:
           <select id="qualitySelect" title="choose better or faster meshing">
             <option value="0">faster (can create defects)</option>
@@ -90,6 +77,19 @@
       </p>
       <p id="largestClusterGroup">
         <label>&nbsp;Largest cluster only</label><input type="checkbox" id="largestCheck" unchecked/>
+      </p>
+      <p id="hollowGroup">
+        <label>
+          &nbsp;Hollow:
+          <select id="hollowSelect" title="hollow meshes require less material but may be fragile">
+            <option value="0" selected>False: solid</option>
+            <option value="-2">2mm</option>
+            <option value="-3">3mm</option>
+            <option value="-4">4mm</option>
+            <option value="-8">8mm</option>
+            <option value="-16">16mm</option>
+          </select>
+        </label>
       </p>
       <p id="bubbleGroup">
         <label>&nbsp;Fill bubbles</label><input type="checkbox" id="bubbleCheck" unchecked/>
