@@ -68,7 +68,7 @@ async function main() {
     if (nii.permRAS[0] !== -1 || nii.permRAS[1] !== 3 || nii.permRAS[2] !== -2)
       isConformed = false
     if (isConformed) return
-    let nii2 = await nv1.conform(nii, false)
+    let nii2 = await nv1.conform(nii, false, true, false, true)
     await nv1.removeVolume(nv1.volumes[0])
     await nv1.addVolume(nii2)
   }
