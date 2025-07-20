@@ -34,7 +34,7 @@ const inferenceModelsList = [
     preModelPostProcess: false, // If true, perform postprocessing to remove noisy regions after preModel inference generate output.
     isBatchOverlapEnable: false, // create extra overlap batches for inference
     numOverlapBatches: 0, // Number of extra overlap batches for inference
-    enableTranspose: true, // Keras and tfjs input orientation may need a tranposing step to be matched
+    enableTranspose: true, // Keras and tfjs input orientation may need a transposing step to be matched
     enableCrop: true, // For speed-up inference, crop brain from background before feeding to inference model to lower memory use.
     cropPadding: 18, // Padding size add to cropped brain
     autoThreshold: 0, // Threshold between 0 and 1, given no preModel and tensor is normalized either min-max or by quantiles. Will remove noisy voxels around brain
@@ -59,7 +59,7 @@ const inferenceModelsList = [
     preModelPostProcess: false, // If true, perform postprocessing to remove noisy regions after preModel inference generate output.
     isBatchOverlapEnable: false, // create extra overlap batches for inference
     numOverlapBatches: 0, // Number of extra overlap batches for inference
-    enableTranspose: true, // Keras and tfjs input orientation may need a tranposing step to be matched
+    enableTranspose: true, // Keras and tfjs input orientation may need a transposing step to be matched
     enableCrop: true, // For speed-up inference, crop brain from background before feeding to inference model to lower memory use.
     cropPadding: 0, // Padding size add to cropped brain
     autoThreshold: 0.2, // Threshold between 0 and 1, given no preModel and tensor is normalized either min-max or by quantiles. Will remove noisy voxels around brain
@@ -85,7 +85,7 @@ const inferenceModelsList = [
     preModelPostProcess: false, // If true, perform postprocessing to remove noisy regions after preModel inference generate output.
     isBatchOverlapEnable: false, // create extra overlap batches for inference
     numOverlapBatches: 0, // Number of extra overlap batches for inference
-    enableTranspose: true, // Keras and tfjs input orientation may need a tranposing step to be matched
+    enableTranspose: true, // Keras and tfjs input orientation may need a transposing step to be matched
     enableCrop: true, // For speed-up inference, crop brain from background before feeding to inference model to lower memory use.
     cropPadding: 0, // Padding size add to cropped brain
     autoThreshold: 0.2, // Threshold between 0 and 1, given no preModel and tensor is normalized either min-max or by quantiles. Will remove noisy voxels around brain
@@ -111,7 +111,7 @@ const inferenceModelsList = [
     preModelPostProcess: false, // If true, perform postprocessing to remove noisy regions after preModel inference generate output.
     isBatchOverlapEnable: false, // create extra overlap batches for inference
     numOverlapBatches: 200, // Number of extra overlap batches for inference
-    enableTranspose: true, // Keras and tfjs input orientation may need a tranposing step to be matched
+    enableTranspose: true, // Keras and tfjs input orientation may need a transposing step to be matched
     enableCrop: true, // For speed-up inference, crop brain from background before feeding to inference model to lower memory use.
     cropPadding: 0, // Padding size add to cropped brain
     autoThreshold: 0.2, // Threshold between 0 and 1, given no preModel and tensor is normalized either min-max or by quantiles. Will remove noisy voxels around brain
@@ -137,7 +137,7 @@ const inferenceModelsList = [
     preModelPostProcess: false, // If true, perform postprocessing to remove noisy regions after preModel inference generate output.
     isBatchOverlapEnable: false, // create extra overlap batches for inference
     numOverlapBatches: 200, // Number of extra overlap batches for inference
-    enableTranspose: true, // Keras and tfjs input orientation may need a tranposing step to be matched
+    enableTranspose: true, // Keras and tfjs input orientation may need a transposing step to be matched
     enableCrop: true, // For speed-up inference, crop brain from background before feeding to inference model to lower memory use.
     cropPadding: 0, // Padding size add to cropped brain
     autoThreshold: 0.2, // Threshold between 0 and 1, given no preModel and tensor is normalized either min-max or by quantiles. Will remove noisy voxels around brain
@@ -163,7 +163,7 @@ const inferenceModelsList = [
     preModelPostProcess: false, // If true, perform postprocessing to remove noisy regions after preModel inference generate output.
     isBatchOverlapEnable: false, // create extra overlap batches for inference
     numOverlapBatches: 200, // Number of extra overlap batches for inference
-    enableTranspose: true, // Keras and tfjs input orientation may need a tranposing step to be matched
+    enableTranspose: true, // Keras and tfjs input orientation may need a transposing step to be matched
     enableCrop: true, // For speed-up inference, crop brain from background before feeding to inference model to lower memory use.
     cropPadding: 0, // Padding size add to cropped brain
     autoThreshold: 0.2, // Threshold between 0 and 1, given no preModel and tensor is normalized either min-max or by quantiles. Will remove noisy voxels around brain
@@ -189,7 +189,7 @@ const inferenceModelsList = [
     preModelPostProcess: false, // If true, perform postprocessing to remove noisy regions after preModel inference generate output.
     isBatchOverlapEnable: false, // create extra overlap batches for inference
     numOverlapBatches: 200, // Number of extra overlap batches for inference
-    enableTranspose: true, // Keras and tfjs input orientation may need a tranposing step to be matched
+    enableTranspose: true, // Keras and tfjs input orientation may need a transposing step to be matched
     enableCrop: true, // For speed-up inference, crop brain from background before feeding to inference model to lower memory use.
     cropPadding: 0, // Padding size add to cropped brain
     autoThreshold: 0, // Threshold between 0 and 1, given no preModel and tensor is normalized either min-max or by quantiles. Will remove noisy voxels around brain
@@ -215,7 +215,7 @@ const inferenceModelsList = [
     preModelPostProcess: false, // If true, perform postprocessing to remove noisy regions after preModel inference generate output.
     isBatchOverlapEnable: false, // create extra overlap batches for inference
     numOverlapBatches: 200, // Number of extra overlap batches for inference
-    enableTranspose: true, // Keras and tfjs input orientation may need a tranposing step to be matched
+    enableTranspose: true, // Keras and tfjs input orientation may need a transposing step to be matched
     enableCrop: true, // For speed-up inference, crop brain from background before feeding to inference model to lower memory use.
     cropPadding: 0, // Padding size add to cropped brain
     autoThreshold: 0, // Threshold between 0 and 1, given no preModel and tensor is normalized either min-max or by quantiles. Will remove noisy voxels around brain
@@ -241,7 +241,7 @@ const inferenceModelsList = [
     preModelPostProcess: false, // If true, perform postprocessing to remove noisy regions after preModel inference generate output.
     isBatchOverlapEnable: false, // create extra overlap batches for inference
     numOverlapBatches: 200, // Number of extra overlap batches for inference
-    enableTranspose: true, // Keras and tfjs input orientation may need a tranposing step to be matched
+    enableTranspose: true, // Keras and tfjs input orientation may need a transposing step to be matched
     enableCrop: true, // For speed-up inference, crop brain from background before feeding to inference model to lower memory use.
     cropPadding: 0, // Padding size add to cropped brain
     autoThreshold: 0, // Threshold between 0 and 1, given no preModel and tensor is normalized either min-max or by quantiles. Will remove noisy voxels around brain
@@ -267,7 +267,7 @@ const inferenceModelsList = [
     preModelPostProcess: false, // If true, perform postprocessing to remove noisy regions after preModel inference generate output.
     isBatchOverlapEnable: false, // create extra overlap batches for inference
     numOverlapBatches: 0, // Number of extra overlap batches for inference
-    enableTranspose: true, // Keras and tfjs input orientation may need a tranposing step to be matched
+    enableTranspose: true, // Keras and tfjs input orientation may need a transposing step to be matched
     enableCrop: true, // For speed-up inference, crop brain from background before feeding to inference model to lower memory use.
     cropPadding: 18, // Padding size add to cropped brain
     autoThreshold: 0, // Threshold between 0 and 1, given no preModel and tensor is normalized either min-max or by quantiles. Will remove noisy voxels around brain
@@ -291,7 +291,7 @@ const inferenceModelsList = [
     preModelPostProcess: false, // If true, perform postprocessing to remove noisy regions after preModel inference generate output.
     isBatchOverlapEnable: false, // create extra overlap batches for inference
     numOverlapBatches: 0, // Number of extra overlap batches for inference
-    enableTranspose: true, // Keras and tfjs input orientation may need a tranposing step to be matched
+    enableTranspose: true, // Keras and tfjs input orientation may need a transposing step to be matched
     enableCrop: true, // For speed-up inference, crop brain from background before feeding to inference model to lower memory use.
     cropPadding: 0, // Padding size add to cropped brain
     autoThreshold: 0, // Threshold between 0 and 1, given no preModel and tensor is normalized either min-max or by quantiles. Will remove noisy voxels around brain
@@ -317,7 +317,7 @@ const inferenceModelsList = [
     preModelPostProcess: false, // If true, perform postprocessing to remove noisy regions after preModel inference generate output.
     isBatchOverlapEnable: false, // create extra overlap batches for inference
     numOverlapBatches: 0, // Number of extra overlap batches for inference
-    enableTranspose: true, // Keras and tfjs input orientation may need a tranposing step to be matched
+    enableTranspose: true, // Keras and tfjs input orientation may need a transposing step to be matched
     enableCrop: true, // For speed-up inference, crop brain from background before feeding to inference model to lower memory use.
     cropPadding: 17, // Padding size add to cropped brain
     autoThreshold: 0, // Threshold between 0 and 1, given no preModel and tensor is normalized either min-max or by quantiles. Will remove noisy voxels around brain
@@ -341,7 +341,7 @@ const inferenceModelsList = [
     preModelPostProcess: false, // If true, perform postprocessing to remove noisy regions after preModel inference generate output.
     isBatchOverlapEnable: false, // create extra overlap batches for inference
     numOverlapBatches: 0, // Number of extra overlap batches for inference
-    enableTranspose: true, // Keras and tfjs input orientation may need a tranposing step to be matched
+    enableTranspose: true, // Keras and tfjs input orientation may need a transposing step to be matched
     enableCrop: true, // For speed-up inference, crop brain from background before feeding to inference model to lower memory use.
     cropPadding: 0, // Padding size add to cropped brain
     autoThreshold: 0, // Threshold between 0 and 1, given no preModel and tensor is normalized either min-max or by quantiles. Will remove noisy voxels around brain
@@ -367,7 +367,7 @@ const inferenceModelsList = [
     preModelPostProcess: false, // If true, perform postprocessing to remove noisy regions after preModel inference generate output.
     isBatchOverlapEnable: false, // create extra overlap batches for inference
     numOverlapBatches: 200, // Number of extra overlap batches for inference
-    enableTranspose: true, // Keras and tfjs input orientation may need a tranposing step to be matched
+    enableTranspose: true, // Keras and tfjs input orientation may need a transposing step to be matched
     enableCrop: true, // For speed-up inference, crop brain from background before feeding to inference model to lower memory use.
     cropPadding: 0, // Padding size add to cropped brain
     autoThreshold: 0, // Threshold between 0 and 1, given no preModel and tensor is normalized either min-max or by quantiles. Will remove noisy voxels around brain
@@ -393,7 +393,7 @@ const inferenceModelsList = [
     preModelPostProcess: false, // If true, perform postprocessing to remove noisy regions after preModel inference generate output.
     isBatchOverlapEnable: false, // create extra overlap batches for inference
     numOverlapBatches: 200, // Number of extra overlap batches for inference
-    enableTranspose: true, // Keras and tfjs input orientation may need a tranposing step to be matched
+    enableTranspose: true, // Keras and tfjs input orientation may need a transposing step to be matched
     enableCrop: true, // For speed-up inference, crop brain from background before feeding to inference model to lower memory use.
     cropPadding: 0, // Padding size add to cropped brain
     autoThreshold: 0, // Threshold between 0 and 1, given no preModel and tensor is normalized either min-max or by quantiles. Will remove noisy voxels around brain
