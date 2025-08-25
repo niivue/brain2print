@@ -710,7 +710,7 @@ async function inferenceFullVolumeSeqCovLayerPhase2(
     console.log('preModel Quantile normalization enabled')
     slices_3d = await quantileNormalizeVolumeData(slices_3d)
   } else {
-    // Min Max Nomalize MRI data to be from 0 to 1
+    // Min Max Normalize MRI data to be from 0 to 1
     console.log('preModel Min Max normalization enabled')
     slices_3d = await minMaxNormalizeVolumeData(slices_3d)
   }
@@ -1126,7 +1126,7 @@ async function inferenceFullVolumePhase2(
     console.log('preModel Quantile normalization enabled')
     slices_3d = await quantileNormalizeVolumeData(slices_3d)
   } else {
-    // Min Max Nomalize MRI data to be from 0 to 1
+    // Min Max Normalize MRI data to be from 0 to 1
     console.log('preModel Min Max normalization enabled')
     slices_3d = await minMaxNormalizeVolumeData(slices_3d)
   }
@@ -1581,7 +1581,7 @@ async function inferenceFullVolumePhase1(
       console.log('preModel Quantile normalization enabled')
       preModel_slices_3d = await quantileNormalizeVolumeData(slices_3d)
     } else {
-      // Min Max Nomalize MRI data to be from 0 to 1
+      // Min Max Normalize MRI data to be from 0 to 1
       console.log('preModel Min Max normalization enabled')
       preModel_slices_3d = await minMaxNormalizeVolumeData(slices_3d)
     }
@@ -1850,7 +1850,7 @@ async function inferenceFullVolumePhase1(
           }
           const Postprocess_t = ((performance.now() - startTime) / 1000).toFixed(4)
           console.log(
-            'Pre-model processing the whole brain volume in tfjs tooks for multi-class output mask : ',
+            'Pre-model processing the whole brain volume in tfjs took for multi-class output mask : ',
             ((performance.now() - inferenceStartTime) / 1000).toFixed(4) + '  Seconds'
           )
 
