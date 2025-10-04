@@ -331,6 +331,12 @@ async function main() {
     if (nv1.volumes[nv1.volumes.length - 1].hdr.intent_code === 0) {
       ({ mesh } = await cuberille(itkImage, { isoSurfaceValue: 240 }))
     } else {
+      // Binarize the image: set all values >= 1 to 1
+      for (let i = 0; i < itkImage.data.length; i++) {
+        if (itkImage.data[i] >= 1) {
+          itkImage.data[i] = 1;
+        }
+      }
       ({ mesh } = await antiAliasCuberille(itkImage, { noClosing: true }))
     }
 
